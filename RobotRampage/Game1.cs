@@ -21,6 +21,11 @@ namespace RobotRampage {
         Texture2D titleScreen;
         SpriteFont pericles14;
 
+        // temporary demo code
+        Sprite tempSprite;
+        Sprite tempSprite2;
+        // temporart code end
+
         public Game1() {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
@@ -53,6 +58,12 @@ namespace RobotRampage {
             pericles14 = Content.Load<SpriteFont>(@"Fonts\Pericles14");
             titleScreen = Content.Load<Texture2D>(@"Textures\TitleScreen");
             spriteSheet = Content.Load<Texture2D>(@"Textures\SpriteSheet");
+
+
+            // temp code start
+            tempSprite = new Sprite(new Vector2(100, 100), spriteSheet, new Rectangle(0, 64, 32, 32), Vector2.Zero);
+            tempSprite2 = new Sprite(new Vector2(200, 200), spriteSheet, new Rectangle(0, 160, 32, 32), Vector2.Zero);
+            // temp code end
         }
 
         /// <summary>
@@ -75,6 +86,35 @@ namespace RobotRampage {
 
             // TODO: Add your update logic here
 
+            // temp code start
+            Vector2 spriteMove = Vector2.Zero;
+            Vector2 cameraMove = Vector2.Zero;
+
+            if (Keyboard.GetState().IsKeyDown(Keys.A))
+                spriteMove.X = -1;
+            if (Keyboard.GetState().IsKeyDown(Keys.D))
+                spriteMove.X = 1;
+            if (Keyboard.GetState().IsKeyDown(Keys.W))
+                spriteMove.Y = -1;
+            if (Keyboard.GetState().IsKeyDown(Keys.S))
+                spriteMove.Y = 1;
+
+            if (Keyboard.GetState().IsKeyDown(Keys.Left))
+                cameraMove.X = -1;
+            if (Keyboard.GetState().IsKeyDown(Keys.Right))
+                cameraMove.X = 1;
+            if (Keyboard.GetState().IsKeyDown(Keys.Up))
+                cameraMove.Y = -1;
+            if (Keyboard.GetState().IsKeyDown(Keys.Down))
+                cameraMove.Y = 1;
+
+            Camera.Move(cameraMove);
+            tempSprite.Velocity = spriteMove * 60;
+            tempSprite.Update(gameTime);
+            tempSprite2.Update(gameTime);
+
+            // temp code end
+
             base.Update(gameTime);
         }
 
@@ -87,7 +127,17 @@ namespace RobotRampage {
 
             // TODO: Add your drawing code here
 
+
+            // temp code start
+            spriteBatch.Begin();
+            tempSprite.Draw(spriteBatch);
+            tempSprite2.Draw(spriteBatch);
+            spriteBatch.End();
+
+
+
             base.Draw(gameTime);
         }
     }
 }
+

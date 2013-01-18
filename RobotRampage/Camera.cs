@@ -17,7 +17,7 @@ namespace RobotRampage {
         #region Properties
         public static Vector2 Position {
             get { return _position; }
-            set { _position = new Vector2(MathHelper.Clamp(value.X, _worldRectangle.X, _worldRectangle.Width - ViewPortWidth), MathHelper.Clamp(value.Y, _worldRectangle.Height - ViewPortHeight)); }
+            set { _position = new Vector2(MathHelper.Clamp(value.X, _worldRectangle.X, _worldRectangle.Width - ViewPortWidth), MathHelper.Clamp(value.Y, _worldRectangle.Y, _worldRectangle.Height - ViewPortHeight)); }
         }
 
         public static Rectangle WorldRectangle {
