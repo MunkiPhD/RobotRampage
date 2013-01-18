@@ -45,5 +45,68 @@ namespace RobotRampage {
                     _mapSquares[x, y] = FloorTileStart;
                 }
         }
+
+
+        #region Map Square Information
+        /// <summary>
+        /// Returns the square on the specified pixel on the X axis
+        /// </summary>
+        /// <param name="pixelX">The pixel where the square resides</param>
+        /// <returns>The index of the square</returns>
+        static public int GetSquareByPixelX(int pixelX) {
+            return pixelX / TileWidth;
+        }
+
+
+        /// <summary>
+        /// Returns the square on the specified pixel on the Y axis
+        /// </summary>
+        /// <param name="pixelY">The Y location of the pixel</param>
+        /// <returns>The index of the square</returns>
+        static public int GetSquareByPixelY(int pixelY) {
+            return pixelY / TileHeight;
+        }
+
+
+
+        /// <summary>
+        /// Returns the square at the specified pixel location
+        /// </summary>
+        /// <param name="pixelLocation">The coordinate of the square you want to get</param>
+        /// <returns></returns>
+        static public Vector2 GetSquareAtPixel(Vector2 pixelLocation) {
+            return new Vector2(GetSquareByPixelX((int)pixelLocation.X), GetSquareByPixelY((int)pixelLocation.Y));
+        }
+
+
+        /// <summary>
+        /// Returns the center of the square
+        /// </summary>
+        /// <param name="squareX">The x index value for the desired square</param>
+        /// <param name="squareY">The y index value for the desired square</param>
+        /// <returns></returns>
+        public static Vector2 GetSquareCenter(int squareX, int squareY) {
+            return new Vector2(
+                (squareX * TileWidth) + (TileWidth / 2),
+                (squareY * TileHeight) + (TileHeight / 2)));
+        }
+
+
+
+        /// <summary>
+        /// Returns the center of the square
+        /// 
+        /// </summary>
+        /// <param name="square"></param>
+        /// <returns></returns>
+        static public Vector2 GetSquareCenter(Vector2 square){
+            return GetSquareCenter((int) square.X, (int)square.Y);
+        }
+
+
+
+
+        static public Rectangle SquareWorldRectangle(int x, int y)
+        #endregion
     } // end class
 } // end namespace
