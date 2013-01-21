@@ -59,6 +59,11 @@ namespace RobotRampage {
             titleScreen = Content.Load<Texture2D>(@"Textures\TitleScreen");
             spriteSheet = Content.Load<Texture2D>(@"Textures\SpriteSheet");
 
+            Camera.WorldRectangle = new Rectangle(0, 0, 1600, 1600);
+            Camera.ViewPortWidth = 800;
+            Camera.ViewPortHeight = 600;
+
+            TileMap.Initialize(spriteSheet);
 
             // temp code start
             tempSprite = new Sprite(new Vector2(100, 100), spriteSheet, new Rectangle(0, 64, 32, 32), Vector2.Zero);
@@ -130,6 +135,7 @@ namespace RobotRampage {
 
             // temp code start
             spriteBatch.Begin();
+            TileMap.Draw(spriteBatch);
             tempSprite.Draw(spriteBatch);
             tempSprite2.Draw(spriteBatch);
             spriteBatch.End();
