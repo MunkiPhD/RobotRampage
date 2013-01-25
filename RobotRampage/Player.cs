@@ -38,12 +38,12 @@ namespace RobotRampage {
             BaseSprite.BoundingYPadding = 4;
             BaseSprite.AnimateWhenStopped = false;
             // i think it should use framewidth * x, not frameheight * x
-            for(int x = 1; x < baseFrameCount; x++)
+            for (int x = 1; x < baseFrameCount; x++)
                 BaseSprite.AddFrame(new Rectangle(baseInitialFrame.X + (frameHeight * x), baseInitialFrame.Y, frameWidth, frameHeight));
 
             TurretSprite = new Sprite(worldLocation, texture, turretInitialFrame, Vector2.Zero);
             // i think this should be turrentSprite, not basesprite
-            for(int x = 1; x < turretFrameCount; x++)
+            for (int x = 1; x < turretFrameCount; x++)
                 BaseSprite.AddFrame(new Rectangle(turretInitialFrame.X + (frameHeight * x), turretInitialFrame.Y, frameWidth, frameHeight));
 
         }
@@ -81,13 +81,13 @@ namespace RobotRampage {
         /// <returns></returns>
         private static Vector2 HandleKeyboardMovement(KeyboardState keyState) {
             Vector2 keyMovement = Vector2.Zero;
-            if(keyState.IsKeyDown(Keys.W))
+            if (keyState.IsKeyDown(Keys.W))
                 keyMovement.Y--;
-            if(keyState.IsKeyDown(Keys.A))
+            if (keyState.IsKeyDown(Keys.A))
                 keyMovement.X--;
-            if(keyState.IsKeyDown(Keys.S))
+            if (keyState.IsKeyDown(Keys.S))
                 keyMovement.Y++;
-            if(keyState.IsKeyDown(Keys.D))
+            if (keyState.IsKeyDown(Keys.D))
                 keyMovement.X++;
 
             return keyMovement;
@@ -111,21 +111,21 @@ namespace RobotRampage {
         /// <returns></returns>
         private static Vector2 HandleKeyboardShots(KeyboardState keyState) {
             Vector2 keyShots = Vector2.Zero;
-            if(keyState.IsKeyDown(Keys.Space))
+            if (keyState.IsKeyDown(Keys.Space))
                 keyShots = new Vector2(-1, 1);
-            if(keyState.IsKeyDown(Keys.NumPad2))
+            if (keyState.IsKeyDown(Keys.NumPad2))
                 keyShots = new Vector2(0, 1);
-            if(keyState.IsKeyDown(Keys.NumPad3))
+            if (keyState.IsKeyDown(Keys.NumPad3))
                 keyShots = new Vector2(1, 1);
-            if(keyState.IsKeyDown(Keys.NumPad4))
+            if (keyState.IsKeyDown(Keys.NumPad4))
                 keyShots = new Vector2(-1, 0);
-            if(keyState.IsKeyDown(Keys.NumPad6))
+            if (keyState.IsKeyDown(Keys.NumPad6))
                 keyShots = new Vector2(1, 0);
-            if(keyState.IsKeyDown(Keys.NumPad7))
+            if (keyState.IsKeyDown(Keys.NumPad7))
                 keyShots = new Vector2(-1, -1);
-            if(keyState.IsKeyDown(Keys.NumPad8))
+            if (keyState.IsKeyDown(Keys.NumPad8))
                 keyShots = new Vector2(0, 1);
-            if(keyState.IsKeyDown(Keys.NumPad9))
+            if (keyState.IsKeyDown(Keys.NumPad9))
                 keyShots = new Vector2(1, -1);
 
             return keyShots;
@@ -151,12 +151,13 @@ namespace RobotRampage {
             fireAngle += HandleKeyboardShots(Keyboard.GetState());
             fireAngle += HandleGamepadShots(GamePad.GetState(PlayerIndex.One));
 
-            if(moveAngle != Vector2.Zero) {
+            if (moveAngle != Vector2.Zero) {
                 moveAngle.Normalize();
                 _baseAngle = moveAngle;
+                moveAngle = CheckTileObstacles(elapsed, moveAngle);
             }
 
-            if(fireAngle != Vector2.Zero) {
+            if (fireAngle != Vector2.Zero) {
                 fireAngle.Normalize();
                 _turretAngle = fireAngle;
             }
@@ -195,17 +196,82 @@ namespace RobotRampage {
             float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
             float moveScale = _playerSpeed * elapsed;
 
-            if((BaseSprite.ScreenRectangle.X < _scrollArea.X) && (moveAngle.X < 0))
+            if ((BaseSprite.ScreenRectangle.X < _scrollArea.X) && (moveAngle.X < 0))
                 Camera.Move(new Vector2(moveAngle.X, 0) * moveScale);
 
-            if((BaseSprite.ScreenRectangle.Right > _scrollArea.Right) && (moveAngle.X > 0))
+            if ((BaseSprite.ScreenRectangle.Right > _scrollArea.Right) && (moveAngle.X > 0))
                 Camera.Move(new Vector2(moveAngle.X, 0) * moveScale);
 
-            if((BaseSprite.ScreenRectangle.Y < _scrollArea.Y) && (moveAngle.Y < 0))
+            if ((BaseSprite.ScreenRectangle.Y < _scrollArea.Y) && (moveAngle.Y < 0))
                 Camera.Move(new Vector2(0, moveAngle.Y) * moveScale);
 
-            if((BaseSprite.ScreenRectangle.Bottom > _scrollArea.Bottom) && (moveAngle.Y > 0))
+            if ((BaseSprite.ScreenRectangle.Bottom > _scrollArea.Bottom) && (moveAngle.Y > 0))
                 Camera.Move(new Vector2(0, moveAngle.Y) * moveScale);
+        }
+
+
+
+        private static Vector2 CheckTileObstacles(float elapsedTime, Vector2 moveAngle) {
+            Vector2 newHorizontalLocation = BaseSprite.WorldLocation + (new Vector2(moveAngle.X, 0) * (_playerSpeed * elapsedTime));
+            Vector2 newVerticalLocation = BaseSprite.WorldLocation + (new Vector2(0, moveAngle.Y) * (_playerSpeed * elapsedTime));
+
+            Rectangle newHorizontalRect = new Rectangle((int)newHorizontalLocation.X, (int)BaseSprite.WorldLocation.Y, BaseSprite.FrameWidth, BaseSprite.FrameHeight);
+            Rectangle newVerticalRect = new Rectangle((int)BaseSprite.WorldLocation.X, (int)newVerticalLocation.Y, BaseSprite.FrameWidth, BaseSprite.FrameHeight);
+
+            int horizLeftPixel = 0;
+            int horizRightPixel = 0;
+            int vertTopPixel = 0;
+            int vertBottomPixel = 0;
+
+            if (moveAngle.X < 0) {
+                horizLeftPixel = (int)newHorizontalRect.Left;
+                horizRightPixel = (int)BaseSprite.WorldRectangle.Left;
+            }
+
+
+            if (moveAngle.X > 0) {
+                horizLeftPixel = (int)BaseSprite.WorldRectangle.Right;
+                horizRightPixel = (int)newHorizontalRect.Right;
+            }
+
+            if (moveAngle.Y < 0) {
+                vertTopPixel = (int)newVerticalRect.Top;
+                vertBottomPixel = (int)BaseSprite.WorldRectangle.Top;
+            }
+
+            if (moveAngle.Y > 0) {
+                vertTopPixel = (int)BaseSprite.WorldRectangle.Bottom;
+                vertBottomPixel = (int)newVerticalRect.Bottom;
+            }
+
+            if (moveAngle.X != 0) {
+                for (int x = horizLeftPixel; x < horizRightPixel; x++) {
+                    for (int y = 0; y < BaseSprite.FrameHeight; y++) {
+                        if (TileMap.IsWallTileByPixel(new Vector2(x, newHorizontalLocation.Y + y))) {
+                            moveAngle.X = 0;
+                            break;
+                        }
+                    }
+                    if (moveAngle.X == 0)
+                        break;
+                }
+            }
+
+            if (moveAngle.Y != 0) {
+                for (int y = vertTopPixel; y < vertBottomPixel; y++) {
+                    for (int x = 0; x < BaseSprite.FrameWidth; x++) {
+                        if (TileMap.IsWallTileByPixel(new Vector2(newVerticalLocation.X + x, y))) {
+                            moveAngle.Y = 0;
+                            break;
+                        }
+                    }
+
+                    if (moveAngle.Y == 0)
+                        break;
+                }
+            }
+
+            return moveAngle;
         }
         #endregion
     } // end class
