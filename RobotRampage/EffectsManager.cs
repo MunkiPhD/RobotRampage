@@ -127,5 +127,20 @@ namespace RobotRampage {
                 Effects.Add(new Particle(location, Texture, ParticleFrame, randomDirection((float)rand.Next(pointSpeedMin, pointSpeedMax)) + momentum, Vector2.Zero, explosionMaxSpeed, duration, initialColor, finalColor));
             }
         }
+
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="location"></param>
+        /// <param name="impactVelocity"></param>
+        public static void AddSparksEffect(Vector2 location, Vector2 impactVelocity) {
+            int particleCount = rand.Next(10, 20);
+            for (int x = 0; x < particleCount; x++) {
+                Particle particle = new Particle(location - (impactVelocity / 60), Texture, ParticleFrame, randomDirection((float)rand.Next(10, 20)), Vector2.Zero, 60, 20, Color.Yellow, Color.Orange);
+                Effects.Add(particle);
+            }
+        }
     }
 }

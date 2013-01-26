@@ -65,6 +65,7 @@ namespace RobotRampage {
 
             TileMap.Initialize(spriteSheet);
             Player.Initialize(spriteSheet, new Rectangle(0, 64, 32, 32), 6, new Rectangle(0, 96, 32, 32), 1, new Vector2(300, 300));
+            EffectsManager.Initialize(spriteSheet, new Rectangle(0, 288, 2, 2), new Rectangle(0, 256, 32, 32), 3);
         }
 
         /// <summary>
@@ -85,7 +86,8 @@ namespace RobotRampage {
             if(GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
 
-            Player.Update(gameTime);    
+            Player.Update(gameTime);
+            EffectsManager.Update(gameTime);
 
             base.Update(gameTime);
         }
@@ -100,6 +102,7 @@ namespace RobotRampage {
             spriteBatch.Begin();
             TileMap.Draw(spriteBatch);
             Player.Draw(spriteBatch);
+            EffectsManager.Draw(spriteBatch);
             spriteBatch.End();
 
             base.Draw(gameTime);

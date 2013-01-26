@@ -15,7 +15,7 @@ namespace RobotRampage {
         public static Sprite TurretSprite;
         private static Vector2 _baseAngle = Vector2.Zero;
         private static Vector2 _turretAngle = Vector2.Zero;
-        private static float _playerSpeed = 90f;
+        private static float _playerSpeed = 190f;
         private static Rectangle _scrollArea = new Rectangle(150, 100, 500, 400);
         #endregion
 
