@@ -64,6 +64,7 @@ namespace RobotRampage {
             Camera.ViewPortHeight = 600;
 
             TileMap.Initialize(spriteSheet);
+            WeaponManager.Texture = spriteSheet;
             Player.Initialize(spriteSheet, new Rectangle(0, 64, 32, 32), 6, new Rectangle(0, 96, 32, 32), 1, new Vector2(300, 300));
             EffectsManager.Initialize(spriteSheet, new Rectangle(0, 288, 2, 2), new Rectangle(0, 256, 32, 32), 3);
         }
@@ -88,6 +89,7 @@ namespace RobotRampage {
 
             Player.Update(gameTime);
             EffectsManager.Update(gameTime);
+            WeaponManager.Update(gameTime);
 
             base.Update(gameTime);
         }
@@ -103,6 +105,7 @@ namespace RobotRampage {
             TileMap.Draw(spriteBatch);
             Player.Draw(spriteBatch);
             EffectsManager.Draw(spriteBatch);
+            WeaponManager.Draw(spriteBatch);
             spriteBatch.End();
 
             base.Draw(gameTime);

@@ -160,6 +160,9 @@ namespace RobotRampage {
             if (fireAngle != Vector2.Zero) {
                 fireAngle.Normalize();
                 _turretAngle = fireAngle;
+
+                if (WeaponManager.CanFireWeapon)
+                    WeaponManager.FireWeapon(TurretSprite.WorldLocation, fireAngle * WeaponManager.WeaponSpeed);
             }
 
 
